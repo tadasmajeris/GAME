@@ -9,7 +9,8 @@ class Hero
   end
   
   def flee(monster)
-    if dice_roll_success stealth, monster.perception
+    dice = Dice.new stealth, monster.perception
+    if dice.roll_success?
       @@fled = true
     else
       @@fled = false
@@ -19,7 +20,8 @@ class Hero
   
   def attack(monster)
     puts "\nAttacking the monster"
-    if dice_roll_success strength, monster.toughness
+    dice = Dice.new strength, monster.toughness
+    if dice.roll_success?
       puts "> Hit!!!!"
       return true
     else
@@ -35,11 +37,28 @@ class Hero
   def fled?
     @@fled
   end
+end
+
+class Monster
+  attr_reader   :toughness, :damage, :perception
   
-  private
+  def initialize toughness, damage, perception
+    @toughness = toughness
+    @damage = damage
+    @perception = perception
+  end
+end
+
+class Dice
+  attr_accessor :dice_rolls, :n, :comparison
   
-  def dice_roll_success n, comparison
-    dice_rolls = []
+  def initialize n, comparison
+    @dice_rolls = []
+    @n = n
+    @comparison = comparison
+  end
+  
+  def roll_success?
     n.times { dice_rolls << rand(1..6) }
     print_rolls dice_rolls
     successes = dice_rolls.count { |die| die >= 5 }
@@ -56,16 +75,6 @@ class Hero
       print ' '
     }
     puts "\n"
-  end
-end
-
-class Monster
-  attr_reader   :toughness, :damage, :perception
-  
-  def initialize toughness, damage, perception
-    @toughness = toughness
-    @damage = damage
-    @perception = perception
   end
 end
 
