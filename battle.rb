@@ -5,7 +5,7 @@ class Hero
     @health = health
     @strength = strength
     @stealth = stealth
-    @fled = false
+    @@fled = false
   end
   
   def print_rolls dice_rolls
@@ -26,9 +26,9 @@ class Hero
     print_rolls dice_rolls
     successes = dice_rolls.count { |die| die >= 5 }
     if successes >= monster.perception
-      @fled = true
+      @@fled = true
     else
-      @fled = false
+      @@fled = false
       puts "> Unlucky... Monster spotted you!"
     end
   end
@@ -54,7 +54,7 @@ class Hero
   end
   
   def fled?
-    @fled
+    @@fled
   end
 end
 
@@ -75,10 +75,21 @@ def print_special txt=nil
   puts txt if txt
 end
 
-def battle_result(hero)
+def battle_result hero
   return "YOU LOST! :(" if hero.dead? 
   return "YOU RAN AWAY..." if hero.fled?
   "YOU WON!"
+end
+
+# prints object's name(class), it's variables and their values
+def print_attributes object
+  print (object.class.to_s.upcase + ': ').rjust($LINE_WIDTH/4)
+  object.instance_variables.each { |attribute|
+    attribute = attribute[1..-1]
+    print (attribute + ":").ljust($LINE_WIDTH/4-4)
+    print "#{object.send(attribute)}  ".rjust(4)
+  }
+  puts
 end
 
 # PROGRAM
@@ -86,19 +97,13 @@ hero = Hero.new 10, 5, 3
 monster = Monster.new rand(2..3), 4, 2
 
 print_special "BATTLE STARTS!"
-print "MONSTER: Toughness: #{monster.toughness}".ljust($LINE_WIDTH/3+5)
-print "Damage: #{monster.damage}".ljust($LINE_WIDTH/3)
-print "Perception: #{monster.perception}".ljust($LINE_WIDTH/3)
-puts
-print "HERO:    Strength: #{hero.strength}".ljust($LINE_WIDTH/3+5)
-print "Health: #{hero.health}".ljust($LINE_WIDTH/3)
-print "Stealth: #{hero.stealth}".ljust($LINE_WIDTH/3)
-puts
+print_attributes hero
+print_attributes monster
 print_special
 
-until hero.attack(monster) || hero.dead? || hero.fled?
+until hero.fled? || hero.attack(monster) || hero.dead?
   puts "> You missed. Monster dealt #{monster.damage} damage."
-  puts "Your current health is #{hero.health}"
+  puts "> Your current health is #{hero.health}"
   
   puts "Trying to flee..."
   hero.flee(monster)
