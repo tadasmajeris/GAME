@@ -8,24 +8,8 @@ class Hero
     @@fled = false
   end
   
-  def print_rolls dice_rolls
-    print "Rolls: "
-    
-    dice_rolls.each { |die|
-      print case die 
-              when 1 then '⠂' when 2 then '⠈⠄' when 3 then '⠑⠄' 
-              when 4 then '⠨⠅' when 5 then '⠕⠅' when 6 then '⠸⠇' end
-      print ' '
-    }
-    puts "\n"
-  end
-  
   def flee(monster)
-    dice_rolls = []
-    stealth.times { dice_rolls << rand(1..6) }
-    print_rolls dice_rolls
-    successes = dice_rolls.count { |die| die >= 5 }
-    if successes >= monster.perception
+    if dice_roll_success stealth, monster.perception
       @@fled = true
     else
       @@fled = false
@@ -35,12 +19,7 @@ class Hero
   
   def attack(monster)
     puts "\nAttacking the monster"
-    dice_rolls = []
-    strength.times { dice_rolls << rand(1..6) }
-    print_rolls dice_rolls
-    
-    successes = dice_rolls.count { |die| die >= 5 }
-    if successes >= monster.toughness
+    if dice_roll_success strength, monster.toughness
       puts "> Hit!!!!"
       return true
     else
@@ -55,6 +34,28 @@ class Hero
   
   def fled?
     @@fled
+  end
+  
+  private
+  
+  def dice_roll_success n, comparison
+    dice_rolls = []
+    n.times { dice_rolls << rand(1..6) }
+    print_rolls dice_rolls
+    successes = dice_rolls.count { |die| die >= 5 }
+    return successes >= comparison
+  end
+  
+  def print_rolls dice_rolls
+    print "Rolls: "
+    
+    dice_rolls.each { |die|
+      print case die 
+              when 1 then '⠂' when 2 then '⠈⠄' when 3 then '⠑⠄' 
+              when 4 then '⠨⠅' when 5 then '⠕⠅' when 6 then '⠸⠇' end
+      print ' '
+    }
+    puts "\n"
   end
 end
 
