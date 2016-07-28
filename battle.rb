@@ -1,15 +1,35 @@
 class Hero
-  attr_reader   :strength
-  attr_accessor :health
+  attr_reader   :strength, :health
   
   def initialize health, strength
     @health = health
     @strength = strength
   end
   
+  def print_rolls dice_rolls
+    print "\nRolls: "
+    
+    dice_rolls.each { |die|
+      print case die 
+              when 1 then '⠂' when 2 then '⠈⠄' when 3 then '⠑⠄' 
+              when 4 then '⠨⠅' when 5 then '⠕⠅' when 6 then '⠸⠇' end
+      print ' '
+    }
+    puts "\n"
+  end
+  
   def attack(monster)
-    attack = rand(strength)
-    attack >= monster.toughness
+    dice_rolls = []
+    strength.times { dice_rolls << rand(1..6) }
+    print_rolls dice_rolls
+    
+    successes = dice_rolls.count { |die| die >= 5 }
+    if successes >= monster.toughness
+      return true
+    else
+      @health -= monster.damage
+      return false
+    end
   end
   
   def dead?
@@ -18,22 +38,17 @@ class Hero
 end
 
 class Monster
-  attr_reader   :damage
-  attr_accessor :toughness
+  attr_reader   :damage, :toughness
   
   def initialize toughness, damage
     @toughness = toughness
     @damage = damage
   end
-  
-  def dead?
-    toughness <= 0
-  end
 end
 
 
 def print_special txt
-  puts '=' * 35
+  puts '=' * 40
   puts txt
 end
 
@@ -42,21 +57,17 @@ def battle_result(hero)
 end
 
 # PROGRAM
-hero = Hero.new 10, 4
+hero = Hero.new 10, 5
 monster = Monster.new rand(2..3), 4
 
 puts
-print_special "Battle started!\nMonster's toughness: #{monster.toughness}\n\n"
+print_special "BATTLE STARTED!"
+puts "Monster's toughness: #{monster.toughness}"
+puts "Hero's strength:     #{hero.strength}"
 
-until monster.dead? || hero.dead?
-  if hero.attack(monster)
-    monster.toughness = 0
-    puts "You hit! You kill the monster!"
-  else
-    puts "You missed. Monster dealt #{monster.damage} damage."
-    hero.health -= monster.damage
-    puts "Your current health is #{hero.health}"
-  end
+until hero.attack(monster) || hero.dead?
+  puts "You missed. Monster dealt #{monster.damage} damage."
+  puts "Your current health is #{hero.health}"
 end
 
 print_special battle_result(hero)+"\n\n"
