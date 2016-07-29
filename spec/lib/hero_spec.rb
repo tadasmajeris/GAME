@@ -26,13 +26,13 @@ describe Hero do
   
   describe "attack" do
     it "succeeds" do
-      dicepool.stub(:skill_check).and_return(3)
+      dicepool.stub(:skill_check).and_return(true)
       hero = Hero.new dicepool: dicepool
       monster = double("monster", toughness: 2)
       expect(hero.attack(monster)).to be true
     end
     it "fails" do
-      dicepool.stub(:skill_check).and_return(1)
+      dicepool.stub(:skill_check).and_return(false)
       hero = Hero.new dicepool: dicepool
       monster = double("monster", toughness: 2)
       expect(hero.attack(monster)).to be false

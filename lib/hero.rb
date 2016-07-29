@@ -8,6 +8,6 @@ class Hero
     end
     
     def attack(monster)
-        @dicepool.skill_check(strength) >= monster.toughness
+        @dicepool.skill_check(strength, monster.toughness)
     end
 end
