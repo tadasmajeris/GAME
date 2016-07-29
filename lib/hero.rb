@@ -1,13 +1,13 @@
 class Hero
-    attr_reader :strength, :health
+    attr_reader :strength, :health, :actions
     
     def initialize attr={}
         @strength = attr[:strength] || 3
         @health   = attr[:health]   || 10
-        @dicepool = attr[:dicepool]
+        @actions  = attr[:actions]  || {}
     end
     
-    def attack(monster)
-        @dicepool.skill_check(strength, monster.toughness)
+    def activate_action(action_name, target)
+      actions[action_name].activate(target)
     end
 end
