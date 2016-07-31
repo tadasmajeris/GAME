@@ -2,8 +2,18 @@ require 'spec_helper'
 require_relative '../../lib/attack_action'
 
 describe AttackAction do
-  let(:hero) { double("hero") }
-  let(:action) { AttackAction.new hero }
+  let(:hero) { double("hero", strength: 3) }
+  let(:dicepool) { double("dicepool") }
+  let(:action) { AttackAction.new hero, dicepool }
+  
+  describe "activate" do
+    
+    it "makes strength check against target toughness" do
+      monster = double("monster", toughness: 2)
+      expect(dicepool).to receive(:skill_check).with(hero.strength, monster.toughness)
+      action.activate(monster)
+    end
+  end
   
   it "responds to activate message" do
     expect(action).to respond_to(:activate)
