@@ -30,8 +30,16 @@ class Hero
       @fled
     end
     
+    def reset_fled
+      @fled = false
+    end
+    
     def flee
       @fled = true
+    end
+    
+    def dead?
+      @health <= 0
     end
     
     def gain_gold(amount)
