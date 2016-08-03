@@ -19,4 +19,10 @@ class Action
       failure(target)
     end
   end
+  
+  def success
+  end
+  
+  def failure
+  end
 end

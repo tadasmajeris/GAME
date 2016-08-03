@@ -7,6 +7,8 @@ describe AttackAction do
   let(:dicepool) { double("dicepool") }
   let(:action) { AttackAction.new hero, dicepool }
   
+  it_behaves_like "action"
+  
   describe "activate" do
     
     it "makes strength check against target toughness" do
