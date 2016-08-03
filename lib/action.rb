@@ -20,6 +20,10 @@ class Action
     end
   end
   
+  def assign_owner(owner)
+    @owner = owner
+  end
+  
   def success(target)
   end
   

@@ -3,7 +3,7 @@ require_relative '../../lib/attack_action'
 
 describe AttackAction do
   let(:hero) { double("hero", strength: 3, gain_exp: nil, gain_gold: nil, damage: nil) }
-  let(:monster) { double("monster", toughness: 2, damage: 4, kill: nil) }
+  let(:monster) { double("monster", toughness: 2, damage: 4, kill: nil, exp: 5, gold: 5) }
   let(:dicepool) { double("dicepool") }
   let(:action) { AttackAction.new hero, dicepool }
   
@@ -29,11 +29,11 @@ describe AttackAction do
         action.activate(monster)
       end
       it "rewards owner with exp" do
-        expect(hero).to receive(:gain_exp)
+        expect(hero).to receive(:gain_exp).with(monster.exp)
         action.activate(monster)
       end
       it "rewards owner with gold" do
-        expect(hero).to receive(:gain_gold)
+        expect(hero).to receive(:gain_gold).with(monster.gold)
         action.activate(monster)
       end
     end

@@ -9,8 +9,8 @@ class AttackAction < Action
   
   def success(target)
     target.kill
-    owner.gain_exp
-    owner.gain_gold
+    owner.gain_exp(target.exp)
+    owner.gain_gold(target.gold)
   end
   
   def failure(target)

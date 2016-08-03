@@ -7,9 +7,15 @@ class Hero
         @stealth  = attr[:stealth]  || 1
         @actions  = attr[:actions]  || {}
         
+        own_actions
+        
         @gold     = 0
         @exp      = 0
         @fled     = false
+    end
+    
+    def own_actions
+      @actions.each { |key, action| action.assign_owner(self) } 
     end
     
     def activate_action(action_name, target)
