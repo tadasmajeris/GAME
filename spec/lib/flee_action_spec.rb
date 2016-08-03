@@ -7,12 +7,15 @@ describe FleeAction do
   let(:dicepool) { double("dicepool") }
   let(:action) { FleeAction.new hero, dicepool }
   
-  describe "activate" do
-    
-    it "makes stealth check against target perception" do
-      expect(dicepool).to receive(:skill_check).with(hero.stealth, monster.perception)
-      action.activate(monster)
-    end
+  it_behaves_like "action"
+  it_behaves_like "subaction"
+  
+  it "has stealth attribute" do
+    expect(action.attribute).to eq(:stealth)
+  end
+  
+  it "has perception for difficulty" do
+    expect(action.difficulty).to eq(:perception)
   end
   
   describe "effect" do
@@ -30,13 +33,5 @@ describe FleeAction do
         action.activate(monster)
       end
     end
-  end
-   
-  it "responds to activate message" do
-    expect(action).to respond_to(:activate)
-  end
-  
-  it "has an owner" do
-    expect(action.owner).to eq(hero)
   end
 end
