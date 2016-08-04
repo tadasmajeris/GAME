@@ -8,6 +8,13 @@ require_relative 'lib/dicepool'
 hero = Hero.new strength: 5, stealth: 5, health: 15, 
                 actions: { attack: AttackAction.new(hero, Dicepool.new), 
                            flee: FleeAction.new(hero, Dicepool.new) }
+
+def print_action_options
+  puts
+  puts "(a)ttack, (f)lee"
+  puts "----------------------------------------------"
+end
+
 kills = 0
 flees = 0
 
@@ -17,13 +24,13 @@ print "Enter number: "
 bravery_measure = gets.chomp.strip.to_i
 
 bravery_measure.times do |i|
-  toughness   = rand(1..4)
+  toughness   = rand(1..3)
   perception  = rand(1..3)
   damage      = toughness + rand(1..2)
   mult        = rand(1..4)
   monster = Monster.new toughness: toughness, perception: perception, damage: damage, 
                         exp: toughness * mult, gold: damage * mult
-                      
+                        
   puts 
   puts "=============================================="
   puts "You are fighting MONSTER #{i + 1} with"
@@ -51,10 +58,12 @@ bravery_measure.times do |i|
         puts "YOU MISSED"
         puts "Monster dealt #{monster.damage} damage to you"
         puts "Your health is #{hero.health}"
-        puts
-        puts "(a)ttack, (f)lee"
-        puts "----------------------------------------------"
-        battle_is_over = true if hero.dead?
+        
+        if hero.dead? 
+          battle_is_over = true
+        else
+          print_action_options
+        end
       end
     elsif command_key == 'f'
       hero.activate_action(:flee, monster)
@@ -67,8 +76,12 @@ bravery_measure.times do |i|
         puts "YOU HAVE BEEN SPOTTED"
         puts "Monster dealt #{monster.damage} damage to you"
         puts "Your health is #{hero.health}"
-        puts "(a)ttack, (f)lee"
-        battle_is_over = true if hero.dead?
+        
+        if hero.dead? 
+          battle_is_over = true
+        else
+          print_action_options
+        end
       end
     else
       puts "(a) for attack, (f) for flee"
